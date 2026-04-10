@@ -1,5 +1,0 @@
-[2026-01-23 15:06:55] INFO: Starting Flye 2.9.6-b1802
-[2026-01-23 15:06:55] DEBUG: Cmd: /apps/antwerpen/zen2/rocky9/Flye/2.9.6-GCC-14.2.0/bin/flye --asm-coverage 50 --nano-hq /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/data/fastq_update//barcode.fastq.gz --out-dir /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/results/assembly_update2//barcode --threads 32 --read-error 0.05 --scaffold --debug --iterations 4 --genome-size 35m
-[2026-01-23 15:06:55] DEBUG: Python version: 3.13.1 (main, Jun  3 2025, 18:04:48) [GCC 14.2.0]
-[2026-01-23 15:06:55] ERROR: Can't open /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/data/fastq_update/barcode.fastq.gz
-[2026-01-23 15:06:55] ERROR: Pipeline aborted
