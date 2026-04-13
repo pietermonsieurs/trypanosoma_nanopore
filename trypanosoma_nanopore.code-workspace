@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "SSH FS - calcua_trypanosoma_nanopore",
+			"uri": "ssh://calcua_trypanosoma_nanopore/user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/bin"
+		}
+	],
+	"settings": {}
+}
