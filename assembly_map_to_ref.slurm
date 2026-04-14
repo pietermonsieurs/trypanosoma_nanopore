@@ -35,4 +35,6 @@ awk '$10 >= 10000 && $12 >= 30' ${assembly_name}_vs_${ref_name}.paf > ${assembly
 # fastq_dir=/user/antwerpen/205/vsc20587/aitg_scratch/jvdabbeele/Tbg_de_novo/
 # for assembly in ${fastq_dir}/*.fasta; do sbatch --export=assembly_genome=${assembly} /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/bin/assembly_map_to_ref.slurm; done
 
+# assembly=/user/antwerpen/205/vsc20587/aitg_scratch/jvdabbeele/Tbg_de_novo/consensus_TbgI_merged.fasta
+# sbatch --export=assembly_genome=${assembly} /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/bin/assembly_map_to_ref.slurm
 
