@@ -1,0 +1,22 @@
+ERROR! QUAST does not support non-ASCII characters in path.
+You have specified /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/results/assembly_QC/quast_manual_assembly_﻿ELIANE as an output path.
+Please, use a different directory.
+
+In case you have troubles running QUAST, you can write to alexey.gurevich@helmholtz-hips.de
+or report an issue on our GitHub repository https://github.com/ablab/quast/issues
+Please provide us with quast.log file from the output directory.
+ERROR! File not found (reverse_reads): /user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/data/fastq_illumina/MM05_WGS_R2.fastq.gz
+
+In case you have troubles running QUAST, you can write to alexey.gurevich@helmholtz-hips.de
+or report an issue on our GitHub repository https://github.com/ablab/quast/issues
+Please provide us with quast.log file from the output directory.
+ERROR! File not found (forward_reads): /user/antwerpen/205/vsc20587/aitg_data/jvdabbeele/Trypanosoma/rawreads/DP8400009737BL_L01_SP2004030345_1.fq.gz
+
+In case you have troubles running QUAST, you can write to alexey.gurevich@helmholtz-hips.de
+or report an issue on our GitHub repository https://github.com/ablab/quast/issues
+Please provide us with quast.log file from the output directory.
+ERROR! File not found (reverse_reads): /user/antwerpen/205/vsc20587/aitg_data/jvdabbeele/Trypanosoma/rawreads/BATCH1/Jua/DP8400009737BL_L01_SP2004030363_2.fq.gz
+
+In case you have troubles running QUAST, you can write to alexey.gurevich@helmholtz-hips.de
+or report an issue on our GitHub repository https://github.com/ablab/quast/issues
+Please provide us with quast.log file from the output directory.
