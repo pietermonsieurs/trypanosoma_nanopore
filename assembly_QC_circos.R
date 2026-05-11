@@ -5,6 +5,11 @@ paf_dir = "/Users/pmonsieurs/programming/trypanosoma_nanopore/results/assembly_Q
 cytoscape_dir = paste0(paf_dir, 'cytoscape/')
 paf_files = list.files(paf_dir, pattern = "filtered.paf", full.names = TRUE)
 
+## read in the text file with the repetitive regions
+rep_regions_file = '/Users/pmonsieurs/programming/trypanosoma_nanopore/results/assembly_QC/repeatfinder/consensus_TbgI_merged.fasta.2.5.5.80.15.40.100.parsed.dat'
+rep_regions = read.table(rep_regions_file, header = TRUE, stringsAsFactors = FALSE)
+head(rep_regions)
+
 paf_all = data.frame()
 for (paf_file in paf_files) {
   
@@ -26,6 +31,7 @@ for (paf_file in paf_files) {
   
   ## do some replacing of chromosome names to make it more readable in the 
   ## circos plots
+  paf$qname_original = paf$qname
   paf$tname = gsub("Tb927_", "", paf$tname)
   paf$tname = gsub("Tbg972_", "", paf$tname)
   paf$tname = gsub("_v5.1", "", paf$tname)
@@ -273,11 +279,42 @@ for (chrom in unique(paf_all$tname)) {
       
       
       
+      # circos.trackPlotRegion(
+      #   ylim = c(0,1),
+      #   track.height = 0.20,
+      #   panel.fun = function(x, y) {
+      #     sector.name <- get.cell.meta.data("sector.index")
+      #     circos.text(
+      #       x = mean(get.cell.meta.data("xlim")),
+      #       y = 0.5,
+      #       labels = sector.name,
+      #       cex = .7,
+      #       facing = "inside"
+      #     )
+      #   }
+      # )
+      
       circos.trackPlotRegion(
         ylim = c(0,1),
         track.height = 0.20,
         panel.fun = function(x, y) {
           sector.name <- get.cell.meta.data("sector.index")
+          
+          # draw repeat regions
+          df <- rep_regions[rep_regions$sequence_id == sector.name, ]
+          
+          if(nrow(df) > 0) {
+            circos.rect(
+              xleft  = df$start,
+              ybottom = 0,
+              xright = df$end,
+              ytop   = 0.2,   # small band so it doesn't cover text
+              col = rgb(1, 0, 0, 0.5),
+              border = NA
+            )
+          }
+          
+          # existing labels
           circos.text(
             x = mean(get.cell.meta.data("xlim")),
             y = 0.5,
@@ -287,6 +324,7 @@ for (chrom in unique(paf_all$tname)) {
           )
         }
       )
+      
       
       for (i in seq_len(nrow(paf))) {
         print(i)
@@ -302,6 +340,112 @@ for (chrom in unique(paf_all$tname)) {
 }
 
 
+## for TbgI we also have repetitive regions which we can try to map on the 
+## outer circle. Same code as above, but now adding additional part to 
+## visualize the repetitve regions
+paf_all_tbgI = paf_all[paf_all$strain == "TbgI",]
+rep_regions$sequence_id_to_match = paf_all_tbgI[match(rep_regions$sequence_id, paf_all_tbgI$qname_original),]$qname_full
+
+strains_with_rep_regions = c('TbgI')
+for (chrom in unique(paf_all$tname)) {
+  for (ref in unique(paf_all$ref_genome)) {
+    for (strain in strains_with_rep_regions) {
+      paf = paf_all[paf_all$tname == chrom & 
+                      paf_all$ref_genome == ref & 
+                      paf_all$strain == strain, 
+                    c(colnames(paf_all)[1:10],'qname_full')]
+      
+      # Unique contigs and chromosomes
+      chroms  <- sort(unique(paf$tname))
+      contigs <- rev(unique(paf[order(paf$tname), ]$qname_full))
+      
+      chroms  <- unique(paf$tname)
+      contigs <- unique(paf$qname_full)
+      
+      # Named vector of lengths
+      contig_lengths <- tapply(paf$qlen, paf$qname_full, max)
+      contig_lengths_sorted = contig_lengths[contigs]
+      
+      chrom_lengths  <- tapply(paf$tlen, paf$tname, max)
+      
+      all_sectors <- c(contigs, chroms)
+      all_lengths <- c(contig_lengths, chrom_lengths)
+      
+      
+      #### 3. enforce left contigs - right reference genome ####
+      n_contigs <- length(contigs)
+      n_chroms  <- length(chroms)
+      
+      ## add additional gaps between the contigs and the chromosomes
+      gap.after <- c(
+        rep(1, n_contigs - 1),
+        10,  # big gap between contigs and chromosomes
+        rep(1, n_chroms - 1),
+        10   # close the circle
+      )
+      
+      
+      
+      #### 4. creating the circos plot ####
+      ## start creating the circos picture
+      pdf_file = paste0(paf_dir, 'per_strain/', strain, '_', chrom, '_', ref, '_with_rep_regions.pdf')
+      pdf(pdf_file, width=8, height=8)
+       
+      circos.clear()
+      circos.par(cell.padding = c(0.001, 0, 0.001, 0))
+      
+      circos.par(gap.after = gap.after)
+      
+      circos.initialize(
+        factors = all_sectors,
+        xlim = cbind(rep(0, length(all_lengths)), all_lengths)
+      )
+      
+      
+      circos.trackPlotRegion(
+        ylim = c(0,1),
+        track.height = 0.20,
+        panel.fun = function(x, y) {
+          sector.name <- get.cell.meta.data("sector.index")
+          
+          # draw repeat regions
+          df <- rep_regions[rep_regions$sequence_id_to_match == sector.name, ]
+          
+          if(nrow(df) > 0) {
+            circos.rect(
+              xleft  = df$start,
+              ybottom = 0,
+              xright = df$end,
+              ytop   = 1,   # small band so it doesn't cover text
+              col = "darkgray",
+              border = NA
+            )
+          }
+          
+          # existing labels
+          circos.text(
+            x = mean(get.cell.meta.data("xlim")),
+            y = 0.5,
+            labels = sector.name,
+            cex = .7,
+            facing = "inside"
+          )
+        }
+      )
+      
+      
+      for (i in seq_len(nrow(paf))) {
+        print(i)
+        circos.link(
+          paf$qname_full[i], c(paf$qstart[i], paf$qend[i]),
+          paf$tname[i], c(paf$tstart[i], paf$tend[i]),
+          col = ifelse(paf$strand[i] == "+", "#1f77b440", "#d6272840")
+        )
+      }
+      dev.off()
+    }
+  }  
+}
 
 
 

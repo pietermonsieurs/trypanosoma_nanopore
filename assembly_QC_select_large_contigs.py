@@ -8,17 +8,21 @@
 from Bio import SeqIO
 
 ## parameter settings
-fasta_input_dir = '/user/antwerpen/205/vsc20587/aitg_scratch/jvdabbeele/Tbg_de_novo/'
-fasta_ouput_dir = '/user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/results/assembly_QC/mauve/'
+# fasta_input_dir = '/user/antwerpen/205/vsc20587/aitg_scratch/jvdabbeele/Tbg_de_novo/'
+# fasta_output_dir = '/user/antwerpen/205/vsc20587/scratch/trypanosoma_nanopore/results/assembly_QC/mauve/'
+fasta_input_dir = '/Users/pmonsieurs/programming/trypanosoma_nanopore/results/assembly_QC/mauve/'
+fasta_output_dir = '/Users/pmonsieurs/programming/trypanosoma_nanopore/results/assembly_QC/mauve/'
 
 ## set the minimum contig length
 min_contig_length = 50000
 
 ## define the input fasta file
-input_fasta = 'consensus_TbgI_merged.fasta'
+input_fasta = 'consensus_TbgI_merged'
 
 ## read the fasta file and select the large contigs
-for record in SeqIO.parse(f"{fasta_input_dir}{input_fasta}.fasta", 'fasta'):
-    if len(record.seq) >= min_contig_length:
-        SeqIO.write(record, f"{fasta_output_dir}{input_fasta}.minL'{min_contig_length}.fasta", 'fasta')
+output_file = f"{fasta_output_dir}{input_fasta}.minL{min_contig_length}.fasta"
+with open(output_file, "w") as out_handle:
+    for record in SeqIO.parse(f"{fasta_input_dir}{input_fasta}.fasta", "fasta"):
+        if len(record.seq) >= min_contig_length:
+            SeqIO.write(record, out_handle, "fasta")
 
