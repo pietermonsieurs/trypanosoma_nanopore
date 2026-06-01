@@ -1,0 +1,4 @@
+Now the parsing is done on the fastq file, but those are written only in batches of multiple sequences. This means that for both scripts the run is dominated by one barcode where you see either the stats increase for only one barcode, or only can see the growing sequences for one barcode. Possible solutions: 
+* switch to the next fastq file after a random number of sequences that varies between 0 and 5? 
+* now the fastq file is written hourly in the minknow software. Not sure whether you can set this to a lower number or to immediate writing to file
+
