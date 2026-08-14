@@ -2,3 +2,4 @@ Now the parsing is done on the fastq file, but those are written only in batches
 * switch to the next fastq file after a random number of sequences that varies between 0 and 5? 
 * now the fastq file is written hourly in the minknow software. Not sure whether you can set this to a lower number or to immediate writing to file
 
+
