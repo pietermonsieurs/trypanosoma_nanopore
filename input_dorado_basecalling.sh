@@ -30,3 +30,45 @@ dorado basecaller dna_r10.4.1_e8.2_400bps_sup@v5.2.0 \
     --kit-name SQK-NBD114-24 \
     -o ${output_dir}
 
+
+## same but now for the dataset of Dalia - preprocessing for Katlijn
+pod5_dir=/mnt/data/malariology/Dalia/20260604_iKOtransgenics/20260604_iKOtransgenics/20260604_1255_MN49550_FBF91010_64b18d78/pod5/
+# output_dir=/mnt/data/malariology/Dalia/20260604_iKOtransgenics/20260604_iKOtransgenics/20260604_1255_MN49550_FBF91010_64b18d78/fastq_dorado_updated/
+output_dir=/mnt/data/malariology/Dalia/20260604_iKOtransgenics/20260604_iKOtransgenics/20260604_1255_MN49550_FBF91010_64b18d78/fastq_dorado_updated_debug/
+
+# dorado download --model dna_r10.4.1_e8.2_400bps_sup@v5.2.0
+dorado basecaller dna_r10.4.1_e8.2_400bps_sup@v5.2.0 \
+    $pod5_dir \
+    --recursive \
+    --device cuda:0 \
+    --emit-fastq \
+    --trim all \
+    --kit-name SQK-NBD114-24 \
+    -o ${output_dir}
+
+
+## check amount of reads in the fastq files
+for fastq_file in ${output_dir}/*/*.fastq; do
+    # echo "File: ${fastq_file}"
+    echo "Number of reads: $(grep -c '^+$' ${fastq_file})"
+done
+
+## do the same for the initial basecalled fastq file (from the original dorado basecalling in 
+## the MinKnow workflow), but you need to sum all counts over the fastq files in one directory
+src_dir=/mnt/data/malariology/Dalia/20260604_iKOtransgenics/20260604_iKOtransgenics/20260604_1255_MN49550_FBF91010_64b18d78/fastq_pass/
+for barcode_dir in $src_dir/*/; do
+    sum=0
+    for fastq_file in ${barcode_dir}/*.fastq.gz; do
+        # echo "File: ${fastq_file}"
+        nr_of_reads=$(zcat ${fastq_file} | grep -c '^+$')
+        sum=$((sum + nr_of_reads))
+    done
+    echo "Barcode directory: ${barcode_dir}: Total number of reads: ${sum}"
+done
+
+
+
+src_dir=/mnt/data/malariology/Dalia/20260604_iKOtransgenics/20260604_iKOtransgenics/20260604_1255_MN49550_FBF91010_64b18d78/fastq_pass/
+for barcode_dir in $src_dir/*/; do
+    du -smc ${barcode_dir}/*.fastq.gz
+done

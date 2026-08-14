@@ -29,7 +29,7 @@ chr10 = gapless_assembly['scaffold53'].seq
 chr11 = sspace_assembly['scaffold3|size6165291'].seq
 
 ## wrtie the merged assembly to a fasta file, with the chromosome names as headers 
-output_file = f"{data_dir}/merged_assembly.fasta"
+output_file = f"{data_dir}/manual_assembly.fasta"
 output_fasta = f">chr1\n{chr1}\n>chr2\n{chr2}\n>chr3\n{chr3}\n>chr4\n{chr4}\n>chr5\n{chr5}\n>chr6\n{chr6}\n>chr7\n{chr7}\n>chr8\n{chr8}\n>chr9\n{chr9}\n>chr10\n{chr10}\n>chr11\n{chr11}"
 with open(output_file, 'w') as f:
     f.write(output_fasta)
